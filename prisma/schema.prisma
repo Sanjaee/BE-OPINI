@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  author    String    @default("Anonim") // Penulis bisa anonim secara default
+  content   String
+  imageUrl  String?   // TAMBAHAN: Kolom untuk menyimpan URL gambar (opsional)
+  createdAt DateTime  @default(now())   // Timestamp pembuatan
+
+  // Relasi: Satu Post bisa punya banyak Comment dan Like
+  comments  Comment[]
+  likes     Like[]
+}
+
+// Model untuk setiap komentar
+model Comment {
+  id        Int      @id @default(autoincrement())
+  author    String   @default("Anonim")
+  content   String
+  createdAt DateTime @default(now())
+
+  // Relasi: Setiap Comment terhubung ke satu Post
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+// Model untuk 'like'
+// Setiap entri di tabel ini merepresentasikan satu 'like'
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  // Relasi: Setiap Like terhubung ke satu Post
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
