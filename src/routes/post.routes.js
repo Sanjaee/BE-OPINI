@@ -13,10 +13,10 @@ const {
 const upload = require("../middleware/upload");
 
 const createPostLimiter = rateLimit({
-  windowMs: 5 * 60 * 1000,
-  max: 6,
+  windowMs: 2 * 24 * 60 * 60 * 1000,
+  max: 1,
   message: {
-    error: "Anda baru saja mengirim postingan. Coba lagi dalam 5 menit.",
+    error: "Anda baru saja mengirim postingan. Coba lagi dalam 2 hari.",
   },
   standardHeaders: true,
   legacyHeaders: false,
